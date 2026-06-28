@@ -1,0 +1,13 @@
+.DS_Store
+Thumbs.db
+
+server/data/
+server/server.exe
+server/tmp/
+.cache/
+
+web/dist/
+web/node_modules/
+web/.vite/
+
+*.log
