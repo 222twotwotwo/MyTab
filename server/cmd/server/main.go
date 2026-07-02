@@ -13,7 +13,7 @@ import (
 )
 
 const (
-	defaultAddr    = ":8080"
+	defaultAddr    = "127.0.0.1:8080"
 	defaultDataDir = "data"
 )
 
@@ -35,6 +35,7 @@ func main() {
 	router.Use(cors())
 
 	router.GET("/healthz", func(c *gin.Context) {
+		c.Header("X-MyTab", "true")
 		c.JSON(http.StatusOK, gin.H{"status": "ok"})
 	})
 
@@ -84,9 +85,22 @@ func main() {
 
 	mountFrontend(router)
 
-	log.Printf("listening on http://localhost%s", addr)
+	log.Printf("listening on %s", displayURL(addr))
 	if err := router.Run(addr); err != nil {
 		log.Fatal(err)
+	}
+}
+
+func displayURL(addr string) string {
+	switch {
+	case strings.HasPrefix(addr, ":"):
+		return "http://localhost" + addr
+	case strings.HasPrefix(addr, "0.0.0.0:"):
+		return "http://localhost:" + strings.TrimPrefix(addr, "0.0.0.0:")
+	case strings.HasPrefix(addr, "[::]:"):
+		return "http://localhost:" + strings.TrimPrefix(addr, "[::]:")
+	default:
+		return "http://" + addr
 	}
 }
 

@@ -27,7 +27,10 @@ Stop residual server processes:
 .\end.bat
 ```
 
-Open `http://localhost:8080`.
+Open `http://127.0.0.1:8080`.
+
+If port `8080` is unavailable or reserved by Windows, `start.bat` tries
+`8081`-`8099`, then asks Windows for an available local port and prints the URL.
 
 ## Manual Run
 
@@ -35,6 +38,13 @@ Start the API:
 
 ```powershell
 cd server
+go run -buildvcs=false ./cmd/server
+```
+
+To choose a port manually:
+
+```powershell
+$env:ADDR = "127.0.0.1:8081"
 go run -buildvcs=false ./cmd/server
 ```
 
